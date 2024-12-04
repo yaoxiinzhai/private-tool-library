@@ -407,3 +407,137 @@ export function untieUrl(url: string): any {
   }
   return obj
 }
+
+/**
+ * 获取指定列表的随机值
+ * @param {*} list 
+ * @returns 
+ */
+export function randomList<T>(list: Array<T>): T {
+  return list[Math.floor(Math.random() * list.length)]
+}
+/**
+ * 合并两个对象
+ * @param {Object} obj1 - 第一个对象
+ * @param {Object} obj2 - 第二个对象
+ * @param {String} type - 决定重复属性时的取值对象，可选值：'default'、'left'、'right'
+ * @param {Boolean} recursion - 是否递归合并嵌套对象
+ * @returns {Object} - 合并后的对象
+ */
+export function mergeObjects(obj1: { [key: string]: any }, obj2: { [key: string]: any, }, type: 'default' | 'left' | 'right' = 'default', recursion: boolean = true): Object {
+  const result: { [key: string]: any, } = {};
+
+  // 获取所有键
+  const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
+
+  allKeys.forEach(key => {
+    const val1 = obj1[key];
+    const val2 = obj2[key];
+
+    if (readType(val1) === "Object" && readType(val2) === "Object") {
+      // 如果两个值都是对象，递归合并
+      result[key] = mergeObjects(val1, val2, type, recursion);
+    } else if (readType(val1) === "Array" && readType(val2) === "Array") {
+      // 如果两个值都是数组，根据类型决定如何合并
+      if (val1 && val2 && val1.length > 0 && val2.length > 0) {
+        // 两边都有值，根据type合并
+        if (type == "right") {
+          result[key] = val2
+        } else {
+          result[key] = val1
+        }
+      } else if (val1.length <= 0 && val2.length <= 0) {
+        // 说明两边都没值，直接赋值空
+        result[key] = []
+      } else {
+        // 一端有值的情况
+        result[key] = val1.length > 0 ? val1 : val2
+      }
+    } else {
+      let val1_type = readType(val1)
+      let val2_type = readType(val2)
+      // 这里好像和类型没有挂钩，判断那边是undefind、null赋值
+      if (val1_type === "Undefined" || val1_type === "Null") {
+        if (val2_type === "Undefined" || val2_type === "Null") {
+          // 说明都是undefined、null，直接赋值undefind
+          result[key] = undefined
+        } else {
+          // 说明val2有值，直接赋值val2
+          result[key] = val2
+        }
+      } else {
+        // val1是有值的
+        if (val2_type === "Undefined" || val2_type === "Null") {
+          // 直接赋值val1
+          result[key] = val1
+        } else {
+          // val2也有值，根据type决定，这里需要注意一下空字符串，这也算作有值，需要判断一下长度
+          if (val1.toString().length > 0 && val2.toString().length > 0) {
+            // 说明两端都有值，根据type赋值
+            if (type == "right") {
+              result[key] = val2
+            } else {
+              result[key] = val1
+            }
+          } else if (val1.toString().length <= 0 && val2.toString().length <= 0) {
+            // 两端都没有值，直接赋值空
+            result[key] = ''
+          } else {
+            // 某端有值
+            result[key] = val1.toString().length > 0 ? val1 : val2
+          }
+
+        }
+      }
+    }
+  });
+
+  // 类型判断
+  function readType(val: any) {
+    let type = null;
+    switch (toString.call(val)) {
+      case "[object String]":
+        type = "String";
+        break;
+      case "[object Number]":
+        type = "Number";
+        break;
+      case "[object Null]":
+        type = "Null";
+        break;
+      case "[object Undefined]":
+        type = "Undefined";
+        break;
+      case "[object Array]":
+        type = "Array";
+        break;
+      case "[object Object]":
+        type = "Object";
+        break;
+      default:
+        break;
+    }
+    return type;
+  }
+
+  return result;
+}
+/**
+ * 复制内容到剪贴板
+ * @param {String} text - 要复制的内容
+ */
+export function copyToClipboard(text: string): void {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text)
+  } else {
+    var textarea = document.createElement('textarea');
+    textarea.style.position = 'fixed';
+    textarea.style.right = '-99px';
+    textarea.style.top = '-99px';
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy', true);
+    document.body.removeChild(textarea);
+  }
+}

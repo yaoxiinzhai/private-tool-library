@@ -1,11 +1,11 @@
 {
   "name": "private-tool-library",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "keywords": [
-		"tool",
+    "tool",
     "library"
-	],
+  ],
   "type": "module",
   "main": "dist/private-tool-library.cjs",
   "module": "dist/private-tool-library.js",
@@ -18,5 +18,13 @@
   "devDependencies": {
     "typescript": "~5.6.2",
     "vite": "^6.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yaoxiinzhai/private-tool-library.git"
+  },
+  "homepage": "https://yaoxinzhai.work/",
+  "engines": {
+    "node": ">=0.8"
   }
 }
