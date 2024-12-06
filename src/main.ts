@@ -21,6 +21,7 @@ import {
   toggle,
 } from "./full-screen"
 
+import WaterFlow from "./waterfall-flow"
 
 export {
   emptyParameterClear,
@@ -41,4 +42,6 @@ export {
   checkFullScreen,
   isFullScreen,
   toggle,
+
+  WaterFlow
 }

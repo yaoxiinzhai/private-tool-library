@@ -1,3 +1,9 @@
+import type {
+  WaterFlowType,
+  WaterfallFlowOptions,
+  ColumnHeightType,
+} from "./waterfall-flow"
+
 
 /** 去除对象、数组中的空字段 */
 export function emptyParameterClear(data?: any, type?: 'default' | 'type' | 'field', rules?: null): any
@@ -64,3 +70,34 @@ export function isFullScreen(): boolean
 /** 全屏切换 */
 export function toggle(element: Element): void
 
+/** 瀑布流类型 */
+export class WaterFlow implements WaterFlowType {
+  options: WaterfallFlowOptions
+  /** 列高度 */
+  columns_heights: ColumnHeightType
+  /** 列 */
+  columns: Array<Array<HTMLElement>>
+  /** 列数 */
+  column_num: number
+  /** 间距 */
+  gap: number
+  /** 底部高度 */
+  bottomHeight: number
+  /** 刷新回调函数 */
+  refreshCallback: Function
+
+  init: Function
+  resizeObserver: Function
+  scrollToBottom: Function
+  mutationObserver: Function
+  debounce: Function
+  resizeResetElement: Function
+  calculateColumn: Function
+  filterElements: Function
+  extractElement: Function
+  findImage: Function
+  loadImage: Function
+  arrangeColumn: Function
+  arrangeItem: Function
+  addElements: Function
+}

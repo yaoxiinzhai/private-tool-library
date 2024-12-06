@@ -23,6 +23,57 @@
 |                          checkFullScreen(): *Element* \|null | 当前处于全屏的元素           |
 |                                    isFullScreen(): *boolean* | 判断是否全屏                 |
 |                         toggle(*element*: *Element*): *void* | 全屏切换                     |
+|                     new WaterFlow(options: WaterFlowOptions) | 瀑布流布局类                 |
+
+
+
+瀑布流布局特殊说明：需要排版的盒子必须给上属性*data-item*，如果有需要加载的远程图片，则图片上面需要加上属性*data-image*。因为是使用定位的方式布局，请参考如下css。使用方式如下：
+
+<font style="color:red">不是很好的解决方法，这里主要提供思路吧，不推荐使用，实际中，构建会很慢，主要是加载远程图片；依次对card布局时，需要等待远程图片加载完成才会布局。</font>
+
+```vue
+<div class="view" id="view">
+    <div class="view__image" :id="'view__image_' + index" v-for="(item, index) in dataList" :key="index" data-item>
+      <img :src="item" alt="" class="image" :id="'image_' + index" data-image />
+      <div class="view__main">
+        <p>欢乐每一天</p>
+        <p>描述描述datasetdatasetdatasetdatasetdataset</p>
+      </div>
+    </div>
+  </div>
+```
+
+```js
+  let waterFlow = new WaterFlow({
+    element: document.getElementById("view"),
+    itemWidth: 300,
+    bottomHeight: 50,
+    refreshCallback: () => {
+      addData()
+    }
+  })
+```
+
+```scss
+.view {
+  resize: both;
+  border: 1px solid #000;
+  width: 950px;
+  height: 600px;
+  overflow: auto;
+  position: relative;
+}
+
+.view__image {
+  width: 300px;
+  position: absolute;
+  display: none;
+}
+
+.image {
+  width: 100%;
+}
+```
 
 
 
